@@ -1,0 +1,19 @@
+server:
+  port: 5757
+spring:
+  application:
+    name: eureka-service
+ribbon:
+  eureka:
+    enabled: false
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+    serviceUrl:
+      defaultTimeZone: http://${eureka.instance.hostname}:${server.port}/eureka
+  server:
+    waitTimeInMsWhenSyncEmpty: 15000
+
