@@ -8,16 +8,57 @@ services:
       - "5757:5757"
     environment:
       SERVER_PORT: "5757"
-  ipo-server:
-    build: ./
-    container_name: ipo-server
+
+  ipo-post:
+    build: /Users/ivannikolaev/IPOProjects/ipo-post
+    container_name: ipo-post
     ports:
       - "8082:8082"
-      - "5005:5005"
     environment:
       SERVER_PORT: "8082"
     depends_on:
+      - ipo-eureka
       - ipo-mongo
+      - ipo-keycloak
+
+  ipo-keycloak:
+    container_name: ipo-keycloak
+    image: mihaibob/keycloak:18.0.2-legacy
+    ports:
+      - "8000:8000"
+    command: ["-Djboss.http.port=8000"]
+    environment:
+      DB_VENDOR: POSTGRES
+      DB_ADDR: ipo-keycloak-postgres
+      DB_DATABASE: keycloak
+      DB_USER: keycloak
+      DB_PASSWORD: root
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: admin
+    depends_on:
+      - ipo-keycloak-postgres
+
+  ipo-keycloak-postgres:
+    container_name: ipo-keycloak-postgres
+    image: postgres:13.0-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: root
+
+  ipo-gateway:
+    build: /Users/ivannikolaev/IPOProjects/ipo-gateway
+    container_name: ipo-gateway
+    ports:
+      - "8079:8079"
+    environment:
+      SERVER_PORT: "8079"
+    depends_on:
+      - ipo-eureka
+      - ipo-keycloak
+
   ipo-mongo:
     container_name: ipo-mongo
     image: mongo:4.4

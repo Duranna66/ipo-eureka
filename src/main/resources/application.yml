@@ -8,12 +8,12 @@ ribbon:
     enabled: false
 eureka:
   instance:
-    hostname: 91.186.197.234
+    hostname: localhost
   client:
     registerWithEureka: false
     fetchRegistry: false
     serviceUrl:
-      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
   server:
     waitTimeInMsWhenSyncEmpty: 15000
 
